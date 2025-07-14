@@ -167,3 +167,7 @@ logs/
 chromedriver*
 geckodriver*
 .DS_Store
+
+# Claude Code
+.claude
+CLAUDE.md

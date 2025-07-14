@@ -67,7 +67,7 @@ def check_required_packages():
     
     if missing_packages:
         print(f"\n  Install missing packages with:")
-        print(f"  pip install {' '.join(missing_packages)}")
+        print(f"  pip3 install {' '.join(missing_packages)}")
         return False
     else:
         print("\n✓ All required packages are installed")
@@ -241,9 +241,9 @@ def main():
     if failed == 0:
         print("🎉 All setup checks passed! You're ready to run the crawler.")
         print("\nNext steps:")
-        print("1. python main.py --init-db    # Initialize database")
-        print("2. python main.py --test       # Test run")
-        print("3. python main.py --schedule   # Production run")
+        print("1. python3 main.py --init-db    # Initialize database")
+        print("2. python3 main.py --test       # Test run")
+        print("3. python3 main.py --schedule   # Production run")
         return 0
     else:
         print("❌ Setup issues found. Please fix the issues above before running the crawler.")

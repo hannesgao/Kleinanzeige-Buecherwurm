@@ -13,31 +13,31 @@ from pathlib import Path
 def run_unit_tests(verbose=False):
     """Run unit tests"""
     print("🧪 Running unit tests...")
-    cmd = ["python", "-m", "pytest", "tests/unit/", "-v" if verbose else "-q"]
+    cmd = ["python3", "-m", "pytest", "tests/unit/", "-v" if verbose else "-q"]
     return subprocess.run(cmd).returncode == 0
 
 def run_integration_tests(verbose=False):
     """Run integration tests"""
     print("🔗 Running integration tests...")
-    cmd = ["python", "-m", "pytest", "tests/integration/", "-v" if verbose else "-q"]
+    cmd = ["python3", "-m", "pytest", "tests/integration/", "-v" if verbose else "-q"]
     return subprocess.run(cmd).returncode == 0
 
 def run_functional_tests(verbose=False):
     """Run functional tests"""
     print("⚙️ Running functional tests...")
-    cmd = ["python", "-m", "pytest", "tests/functional/", "-v" if verbose else "-q"]
+    cmd = ["python3", "-m", "pytest", "tests/functional/", "-v" if verbose else "-q"]
     return subprocess.run(cmd).returncode == 0
 
 def run_all_tests(verbose=False):
     """Run all tests"""
     print("🚀 Running all tests...")
-    cmd = ["python", "-m", "pytest", "tests/", "-v" if verbose else "-q"]
+    cmd = ["python3", "-m", "pytest", "tests/", "-v" if verbose else "-q"]
     return subprocess.run(cmd).returncode == 0
 
 def run_quick_tests(verbose=False):
     """Run quick tests (excluding slow ones)"""
     print("⚡ Running quick tests...")
-    cmd = ["python", "-m", "pytest", "tests/", "-m", "not slow", "-v" if verbose else "-q"]
+    cmd = ["python3", "-m", "pytest", "tests/", "-m", "not slow", "-v" if verbose else "-q"]
     return subprocess.run(cmd).returncode == 0
 
 def run_production_tests(verbose=False):
@@ -50,14 +50,14 @@ def run_production_tests(verbose=False):
     env['SKIP_NETWORK_TESTS'] = 'true'  # Skip network tests in production
     env['SKIP_DATABASE_TESTS'] = 'true'  # Skip database tests in production
     
-    cmd = ["python", "-m", "pytest", "tests/functional/", "-v" if verbose else "-q"]
+    cmd = ["python3", "-m", "pytest", "tests/functional/", "-v" if verbose else "-q"]
     return subprocess.run(cmd, env=env).returncode == 0
 
 def run_coverage_tests(verbose=False):
     """Run tests with coverage reporting"""
     print("📊 Running tests with coverage...")
     cmd = [
-        "python", "-m", "pytest",
+        "python3", "-m", "pytest",
         "tests/",
         "--cov=src",
         "--cov-report=html",
@@ -69,7 +69,7 @@ def run_coverage_tests(verbose=False):
 def run_specific_test(test_path, verbose=False):
     """Run a specific test file or function"""
     print(f"🎯 Running specific test: {test_path}")
-    cmd = ["python", "-m", "pytest", test_path, "-v" if verbose else "-q"]
+    cmd = ["python3", "-m", "pytest", test_path, "-v" if verbose else "-q"]
     return subprocess.run(cmd).returncode == 0
 
 def check_test_requirements():
@@ -94,7 +94,7 @@ def check_test_requirements():
     
     if missing_packages:
         print(f"\n📦 Install missing packages with:")
-        print(f"pip install {' '.join(missing_packages)}")
+        print(f"pip3 install {' '.join(missing_packages)}")
         return False
     
     print("✅ All test requirements are met")
@@ -107,14 +107,14 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  python tests/run_tests.py --unit              # Run unit tests
-  python tests/run_tests.py --integration       # Run integration tests  
-  python tests/run_tests.py --functional        # Run functional tests
-  python tests/run_tests.py --all               # Run all tests
-  python tests/run_tests.py --quick             # Run quick tests
-  python tests/run_tests.py --production        # Run production tests
-  python tests/run_tests.py --coverage          # Run with coverage
-  python tests/run_tests.py --test tests/unit/test_parser.py  # Run specific test
+  python3 tests/run_tests.py --unit              # Run unit tests
+  python3 tests/run_tests.py --integration       # Run integration tests  
+  python3 tests/run_tests.py --functional        # Run functional tests
+  python3 tests/run_tests.py --all               # Run all tests
+  python3 tests/run_tests.py --quick             # Run quick tests
+  python3 tests/run_tests.py --production        # Run production tests
+  python3 tests/run_tests.py --coverage          # Run with coverage
+  python3 tests/run_tests.py --test tests/unit/test_parser.py  # Run specific test
         """
     )
     

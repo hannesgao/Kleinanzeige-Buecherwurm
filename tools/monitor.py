@@ -147,7 +147,7 @@ def show_system_status():
             print("Chrome processes: None running")
         
     except ImportError:
-        print("psutil not installed - install with: pip install psutil")
+        print("psutil not installed - install with: pip3 install psutil")
     except Exception as e:
         print(f"Error checking system status: {e}")
 

@@ -21,23 +21,21 @@ python3 --version || {
     exit 1
 }
 
-# Check if virtual environment exists
-if [ ! -d "venv" ]; then
-    echo "📦 Creating virtual environment..."
-    python3 -m venv venv
+# Check if pip3 is available
+if ! command -v pip3 &> /dev/null; then
+    echo "❌ pip3 is not installed"
+    echo "Please install python3-pip"
+    echo "Ubuntu: sudo apt install python3-pip"
+    exit 1
 fi
-
-# Activate virtual environment
-echo "🔄 Activating virtual environment..."
-source venv/bin/activate
 
 # Upgrade pip
 echo "⬆️ Upgrading pip..."
-pip install --upgrade pip
+pip3 install --upgrade pip
 
 # Install requirements
 echo "📥 Installing Python packages..."
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 
 # Create necessary directories
 echo "📁 Creating directories..."
@@ -66,7 +64,7 @@ fi
 
 # Run setup check
 echo "🔍 Running setup verification..."
-python3 scripts/check_setup.py
+python3 tools/check_setup.py
 
 echo ""
 echo "🎉 Installation completed!"

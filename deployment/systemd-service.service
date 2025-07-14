@@ -8,10 +8,10 @@ Type=simple
 User=kleinanzeigen
 Group=kleinanzeigen
 WorkingDirectory=/home/kleinanzeigen/Kleinanzeige-Buecherwurm
-Environment=PATH=/home/kleinanzeigen/Kleinanzeige-Buecherwurm/venv/bin
+Environment=PATH=/usr/bin:/bin
 
 # Main command
-ExecStart=/home/kleinanzeigen/Kleinanzeige-Buecherwurm/venv/bin/python main.py --schedule --headless
+ExecStart=/usr/bin/python3 /home/kleinanzeigen/Kleinanzeige-Buecherwurm/main.py --schedule --headless
 
 # Restart policy
 Restart=always

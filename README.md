@@ -37,26 +37,24 @@ cd Kleinanzeige-Buecherwurm
 
 3. **Manual installation**:
 ```bash
-python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 cp .env.example .env
 # Edit .env with your database and email credentials
 ```
 
 4. **Verify setup**:
 ```bash
-python tools/check_setup.py
+python3 tools/check_setup.py
 ```
 
 5. **Initialize database**:
 ```bash
-python main.py --init-db
+python3 main.py --init-db
 ```
 
 6. **Test the crawler**:
 ```bash
-python main.py --test --headless
+python3 main.py --test --headless
 ```
 
 ## 🎯 Usage
@@ -65,19 +63,19 @@ python main.py --test --headless
 
 ```bash
 # Run once (interactive mode)
-python main.py
+python3 main.py
 
 # Run in headless mode
-python main.py --headless
+python3 main.py --headless
 
 # Test mode (limit to 5 listings)
-python main.py --test
+python3 main.py --test
 
 # Scheduled mode (runs every 6 hours)
-python main.py --schedule
+python3 main.py --schedule
 
 # Custom configuration
-python main.py --config custom-config.yaml
+python3 main.py --config custom-config.yaml
 ```
 
 ### Configuration
@@ -135,36 +133,36 @@ See [docs/PROJECT_STRUCTURE.md](docs/PROJECT_STRUCTURE.md) for detailed structur
 ### Running Tests
 ```bash
 # Quick tests (recommended)
-python tests/run_tests.py --quick
+python3 tests/run_tests.py --quick
 
 # All tests
-python tests/run_tests.py --all
+python3 tests/run_tests.py --all
 
 # Specific test types
-python tests/run_tests.py --unit
-python tests/run_tests.py --integration
-python tests/run_tests.py --functional
+python3 tests/run_tests.py --unit
+python3 tests/run_tests.py --integration
+python3 tests/run_tests.py --functional
 
 # With coverage
-python tests/run_tests.py --coverage
+python3 tests/run_tests.py --coverage
 
 # Production tests
-python tests/run_tests.py --production
+python3 tests/run_tests.py --production
 
 # Project verification
-python quality/testing/check_project.py
+python3 quality/testing/check_project.py
 ```
 
 ### Code Quality
 ```bash
 # Format code
-black src/
+python3 -m black src/
 
 # Type checking
-mypy src/
+python3 -m mypy src/
 
 # Linting
-flake8 src/
+python3 -m flake8 src/
 ```
 
 ### Database Operations
@@ -182,16 +180,16 @@ SELECT COUNT(*) FROM book_listings WHERE is_active = TRUE;
 ### Monitoring
 ```bash
 # View crawler statistics
-python tools/monitor.py --stats
+python3 tools/monitor.py --stats
 
 # View recent sessions
-python tools/monitor.py --sessions 10
+python3 tools/monitor.py --sessions 10
 
 # View system status
-python tools/monitor.py --system
+python3 tools/monitor.py --system
 
 # View all information
-python tools/monitor.py --all
+python3 tools/monitor.py --all
 ```
 
 ## 🛡️ Error Handling
@@ -231,7 +229,7 @@ The crawler includes robust error handling:
 ```bash
 # Enable debug logging
 export DEBUG=True
-python main.py --test
+python3 main.py --test
 ```
 
 ### Log Analysis

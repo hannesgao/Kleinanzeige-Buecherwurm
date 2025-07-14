@@ -193,19 +193,25 @@ def run_crawl_session(db_manager, notifier, config, selenium_config, test_mode=F
         logger.error(f"Crawl session failed: {e}")
         
         # Update session status
-        if crawl_session_id:
-            with db_manager.get_session() as db:
-                crawl_session = db.query(CrawlSession).filter_by(id=crawl_session_id).first()
-                if crawl_session:
-                    crawl_session.status = 'failed'
-                    crawl_session.error_message = str(e)
-                    crawl_session.end_time = datetime.utcnow()
-                    db.commit()
+        if 'crawl_session_id' in locals() and crawl_session_id:
+            try:
+                with db_manager.get_session() as db:
+                    crawl_session = db.query(CrawlSession).filter_by(id=crawl_session_id).first()
+                    if crawl_session:
+                        crawl_session.status = 'failed'
+                        crawl_session.error_message = str(e)
+                        crawl_session.end_time = datetime.utcnow()
+                        db.commit()
+            except Exception as db_error:
+                logger.error(f"Failed to update session status: {db_error}")
         raise
         
     finally:
         if crawler:
-            crawler.close()
+            try:
+                crawler.close()
+            except Exception as close_error:
+                logger.error(f"Error closing crawler: {close_error}")
 
 def save_listing(db_manager, listing_data: Dict, crawl_session_id: int) -> bool:
     """Save listing to database and return True if new listing"""

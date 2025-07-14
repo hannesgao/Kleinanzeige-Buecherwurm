@@ -12,6 +12,9 @@ from loguru import logger
 from typing import List, Dict, Optional
 from urllib.parse import urljoin, quote
 import json
+import re
+import locale
+from datetime import datetime
 from ..utils.retry import retry_on_exception, NetworkError, ParseError
 
 class KleinanzeigenCrawler:
@@ -325,10 +328,20 @@ class KleinanzeigenCrawler:
         """Extract listing ID from URL"""
         try:
             # URL format: .../s-anzeige/title/id
+            if not url or not isinstance(url, str):
+                logger.warning(f"Invalid URL provided: {url}")
+                return None
             parts = url.split('/')
+            if len(parts) == 0:
+                logger.warning(f"Could not parse URL: {url}")
+                return None
             return parts[-1]
-        except:
-            return url.split('/')[-1][:100]  # Fallback
+        except (AttributeError, IndexError, TypeError) as e:
+            logger.warning(f"Error extracting listing ID from {url}: {e}")
+            try:
+                return url.split('/')[-1][:100]  # Fallback
+            except (AttributeError, IndexError):
+                return None
     
     def _safe_find_text(self, selector: str, by: By = By.CSS_SELECTOR) -> Optional[str]:
         """Safely find and extract text from element"""
@@ -348,13 +361,12 @@ class KleinanzeigenCrawler:
                 return 0.0
             
             # Extract numeric price
-            import re
             price_match = re.search(r'(\d+(?:\.\d+)?)', price_text.replace(',', '.'))
             if price_match:
                 return float(price_match.group(1))
                 
-        except:
-            pass
+        except (ValueError, TypeError, AttributeError) as e:
+            logger.debug(f"Error extracting price: {e}")
         return 0.0
     
     def _extract_postal_code(self) -> Optional[str]:
@@ -362,12 +374,11 @@ class KleinanzeigenCrawler:
         try:
             location = self._safe_find_text("#viewad-locality")
             if location:
-                import re
                 match = re.search(r'\b(\d{5})\b', location)
                 if match:
                     return match.group(1)
-        except:
-            pass
+        except (NoSuchElementException, AttributeError) as e:
+            logger.debug(f"Error extracting postal code: {e}")
         return None
     
     def _extract_seller_type(self) -> str:
@@ -386,15 +397,14 @@ class KleinanzeigenCrawler:
             date_elem = self.driver.find_element(By.CSS_SELECTOR, "#viewad-extra-info span")
             date_text = date_elem.text
             # Parse German date format
-            from datetime import datetime
-            import locale
             try:
                 locale.setlocale(locale.LC_TIME, 'de_DE.UTF-8')
-            except:
-                pass
+            except locale.Error:
+                logger.warning("Could not set German locale for date parsing")
             # Return raw date string for now
             return date_text
-        except:
+        except (NoSuchElementException, AttributeError) as e:
+            logger.debug(f"Error extracting date: {e}")
             return None
     
     def _extract_views(self) -> Optional[int]:
@@ -403,12 +413,11 @@ class KleinanzeigenCrawler:
             views_elem = self.driver.find_element(
                 By.XPATH, "//span[contains(text(), 'mal aufgerufen')]"
             )
-            import re
             match = re.search(r'(\d+)', views_elem.text)
             if match:
                 return int(match.group(1))
-        except:
-            pass
+        except (NoSuchElementException, ValueError, AttributeError) as e:
+            logger.debug(f"Error extracting views: {e}")
         return None
     
     def _extract_images(self) -> List[str]:
@@ -436,15 +445,16 @@ class KleinanzeigenCrawler:
             )
             close_button.click()
             
-        except:
+        except (NoSuchElementException, WebDriverException) as e:
+            logger.debug(f"Could not handle image overlay: {e}")
             # Fallback: try to get main image
             try:
                 main_img = self.driver.find_element(By.CSS_SELECTOR, "#viewad-image img")
                 src = main_img.get_attribute("src")
                 if src:
                     images.append(src)
-            except:
-                pass
+            except (NoSuchElementException, AttributeError) as e:
+                logger.debug(f"Error getting fallback image: {e}")
                 
         return images
     
@@ -464,7 +474,8 @@ class KleinanzeigenCrawler:
             )
             return phone_elem.text.strip()
             
-        except:
+        except (NoSuchElementException, AttributeError) as e:
+            logger.debug(f"Error extracting phone: {e}")
             return None
     
     def _random_delay(self, min_seconds: float = None, max_seconds: float = None):
@@ -480,5 +491,11 @@ class KleinanzeigenCrawler:
     def close(self):
         """Close the browser driver"""
         if self.driver:
-            self.driver.quit()
-            logger.info("Browser closed")
+            try:
+                self.driver.quit()
+                logger.info("Browser closed")
+            except Exception as e:
+                logger.error(f"Error closing browser: {e}")
+            finally:
+                self.driver = None
+                self.wait = None

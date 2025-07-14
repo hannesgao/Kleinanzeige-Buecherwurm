@@ -3,6 +3,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from typing import List, Dict
 from loguru import logger
+import html
 
 class NotificationManager:
     """Handle email notifications for new listings"""
@@ -136,17 +137,18 @@ class NotificationManager:
         """.format(count=len(listings))
         
         for listing in listings:
-            title = listing.get('title', 'No Title')
-            description = listing.get('description', '')[:300]
+            # Escape HTML to prevent XSS
+            title = html.escape(listing.get('title', 'No Title'))
+            description = html.escape(listing.get('description', ''))[:300]
             if len(listing.get('description', '')) > 300:
                 description += '...'
             
             price = listing.get('price', 0)
             price_text = 'Free' if price == 0 else f'{price:.2f} €'
             
-            location = listing.get('location', 'Unknown')
-            url = listing.get('listing_url', '#')
-            thumbnail = listing.get('thumbnail_url', '')
+            location = html.escape(listing.get('location', 'Unknown'))
+            url = html.escape(listing.get('listing_url', '#'))
+            thumbnail = html.escape(listing.get('thumbnail_url', '')) if listing.get('thumbnail_url') else ''
             
             html += f"""
             <div class="listing clearfix">

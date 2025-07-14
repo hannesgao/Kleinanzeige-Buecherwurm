@@ -1,0 +1,60 @@
+# Kleinanzeigen Crawler Configuration
+
+# Search parameters
+search:
+  category: "antike-buecher"  # Antique books category
+  location: "Karlsruhe"
+  radius_km: 20
+  max_price: 0  # 0 means free items only
+  keywords:
+    - "sammlung"  # Collection
+    - "konvolut"  # Bundle
+    - "nachlass"  # Estate
+  
+# Selenium settings
+selenium:
+  browser: "chrome"
+  headless: false  # Set to true for production
+  window_size: "1920,1080"
+  page_load_timeout: 30
+  implicit_wait: 10
+  user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
+
+# Crawler settings
+crawler:
+  max_pages: 50  # Maximum number of result pages to crawl
+  delay_between_requests: 3  # Seconds between requests
+  retry_attempts: 3
+  retry_delay: 5  # Seconds between retries
+  
+# Database settings
+database:
+  type: "postgresql"
+  host: "${DB_HOST}"
+  port: 5432
+  name: "${DB_NAME}"
+  user: "${DB_USER}"
+  password: "${DB_PASSWORD}"
+  
+# Logging settings
+logging:
+  level: "INFO"
+  format: "{time:YYYY-MM-DD HH:mm:ss} | {level} | {name}:{function}:{line} - {message}"
+  rotation: "100 MB"
+  retention: "7 days"
+  
+# Notification settings
+notifications:
+  enabled: true
+  email:
+    smtp_server: "${SMTP_SERVER}"
+    smtp_port: 587
+    sender: "${EMAIL_SENDER}"
+    password: "${EMAIL_PASSWORD}"
+    recipients:
+      - "${EMAIL_RECIPIENT}"
+  
+# Schedule settings
+schedule:
+  enabled: true
+  cron: "0 */6 * * *"  # Every 6 hours

@@ -51,90 +51,92 @@ class NotificationManager:
         
     def _create_listing_html(self, listings: List[Dict]) -> str:
         """Create HTML content for listing notification"""
-        html = """
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <meta charset="UTF-8">
-            <style>
-                body {
-                    font-family: Arial, sans-serif;
-                    line-height: 1.6;
-                    color: #333;
-                    max-width: 800px;
-                    margin: 0 auto;
-                    padding: 20px;
-                }
-                h1 {
-                    color: #2c3e50;
-                    border-bottom: 2px solid #3498db;
-                    padding-bottom: 10px;
-                }
-                .listing {
-                    background: #f9f9f9;
-                    border: 1px solid #ddd;
-                    border-radius: 8px;
-                    padding: 15px;
-                    margin-bottom: 20px;
-                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-                }
-                .listing h2 {
-                    margin-top: 0;
-                    color: #2c3e50;
-                    font-size: 1.3em;
-                }
-                .listing-image {
-                    float: right;
-                    max-width: 150px;
-                    max-height: 150px;
-                    margin: 0 0 10px 15px;
-                    border-radius: 4px;
-                }
-                .price {
-                    font-size: 1.2em;
-                    font-weight: bold;
-                    color: #27ae60;
-                    margin: 10px 0;
-                }
-                .location {
-                    color: #7f8c8d;
-                    margin: 5px 0;
-                }
-                .description {
-                    margin: 10px 0;
-                    color: #555;
-                }
-                .view-button {
-                    display: inline-block;
-                    background: #3498db;
-                    color: white;
-                    padding: 8px 16px;
-                    text-decoration: none;
-                    border-radius: 4px;
-                    margin-top: 10px;
-                }
-                .view-button:hover {
-                    background: #2980b9;
-                }
-                .footer {
-                    margin-top: 40px;
-                    padding-top: 20px;
-                    border-top: 1px solid #ddd;
-                    text-align: center;
-                    color: #7f8c8d;
-                    font-size: 0.9em;
-                }
-                .clearfix::after {
-                    content: "";
-                    display: table;
-                    clear: both;
-                }
-            </style>
-        </head>
-        <body>
-            <h1>New Books on Kleinanzeigen 📚</h1>
-            <p>Found <strong>{count}</strong> new free book collections!</p>
-        """.format(count=len(listings))
+        # Create the HTML template with proper escaping for CSS braces
+        html_template = """<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {{
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }}
+        h1 {{
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }}
+        .listing {{
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }}
+        .listing h2 {{
+            margin-top: 0;
+            color: #2c3e50;
+            font-size: 1.3em;
+        }}
+        .listing-image {{
+            float: right;
+            max-width: 150px;
+            max-height: 150px;
+            margin: 0 0 10px 15px;
+            border-radius: 4px;
+        }}
+        .price {{
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #27ae60;
+            margin: 10px 0;
+        }}
+        .location {{
+            color: #7f8c8d;
+            margin: 5px 0;
+        }}
+        .description {{
+            margin: 10px 0;
+            color: #555;
+        }}
+        .view-button {{
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 8px 16px;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 10px;
+        }}
+        .view-button:hover {{
+            background: #2980b9;
+        }}
+        .footer {{
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }}
+        .clearfix::after {{
+            content: "";
+            display: table;
+            clear: both;
+        }}
+    </style>
+</head>
+<body>
+    <h1>New Books on Kleinanzeigen 📚</h1>
+    <p>Found <strong>{count}</strong> new free book collections!</p>
+"""
+        
+        html_content = html_template.format(count=len(listings))
         
         for listing in listings:
             # Escape HTML to prevent XSS
@@ -147,10 +149,25 @@ class NotificationManager:
             price_text = 'Free' if price == 0 else f'{price:.2f} €'
             
             location = html.escape(listing.get('location', 'Unknown'))
-            url = html.escape(listing.get('listing_url', '#'))
-            thumbnail = html.escape(listing.get('thumbnail_url', '')) if listing.get('thumbnail_url') else ''
             
-            html += f"""
+            # Sanitize URL to prevent javascript: and other dangerous schemes
+            raw_url = listing.get('listing_url', '#')
+            if isinstance(raw_url, str) and raw_url.lower().startswith(('javascript:', 'data:', 'vbscript:')):
+                url = '#'  # Replace dangerous URLs with safe fallback
+            else:
+                url = html.escape(raw_url)
+            
+            # Sanitize thumbnail URL similarly
+            raw_thumbnail = listing.get('thumbnail_url', '')
+            if raw_thumbnail and isinstance(raw_thumbnail, str):
+                if raw_thumbnail.lower().startswith(('javascript:', 'data:', 'vbscript:')):
+                    thumbnail = ''  # Remove dangerous thumbnail URLs
+                else:
+                    thumbnail = html.escape(raw_thumbnail)
+            else:
+                thumbnail = ''
+            
+            html_content += f"""
             <div class="listing clearfix">
                 {f'<img src="{thumbnail}" class="listing-image" alt="{title}">' if thumbnail else ''}
                 <h2>{title}</h2>
@@ -161,7 +178,7 @@ class NotificationManager:
             </div>
             """
         
-        html += """
+        html_content += """
             <div class="footer">
                 <p>This email was automatically generated by Kleinanzeigen-Bücherwurm.</p>
                 <p>To stop receiving notifications, please adjust your configuration.</p>
@@ -170,4 +187,4 @@ class NotificationManager:
         </html>
         """
         
-        return html
+        return html_content

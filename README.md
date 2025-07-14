@@ -113,6 +113,10 @@ Edit `config.yaml` for:
 │   ├── unit/              # Unit tests
 │   ├── integration/       # Integration tests
 │   └── functional/        # Functional tests
+├── quality/               # Quality assurance
+│   ├── audits/           # Security and code audits
+│   ├── reports/          # Quality reports
+│   └── testing/          # Testing tools
 ├── config/                # Configuration examples
 ├── tools/                 # Development tools
 ├── deployment/            # Deployment configurations
@@ -124,7 +128,7 @@ Edit `config.yaml` for:
 └── main.py               # Entry point
 ```
 
-See [docs/PROJECT_STRUCTURE.md](docs/PROJECT_STRUCTURE.md) for detailed structure documentation.
+See [docs/PROJECT_STRUCTURE.md](docs/PROJECT_STRUCTURE.md) for detailed structure documentation and [docs/PROJECT_REORGANIZATION_SUMMARY.md](docs/PROJECT_REORGANIZATION_SUMMARY.md) for reorganization details.
 
 ## 🔧 Development
 
@@ -146,6 +150,9 @@ python tests/run_tests.py --coverage
 
 # Production tests
 python tests/run_tests.py --production
+
+# Project verification
+python quality/testing/check_project.py
 ```
 
 ### Code Quality

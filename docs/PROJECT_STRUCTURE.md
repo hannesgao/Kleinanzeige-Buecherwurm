@@ -9,81 +9,103 @@ Kleinanzeige-Buecherwurm/
 ├── LICENSE                            # MIT License
 ├── setup.py                           # Python package setup
 ├── requirements.txt                   # Python dependencies
-├── main.py                           # Main entry point
-├── config.yaml                       # Default configuration
-├── .env.example                      # Environment variables template
-├── .gitignore                        # Git ignore rules
+├── main.py                            # Main entry point
+├── config.yaml                        # Default configuration
+├── .env.example                       # Environment variables template
+├── .gitignore                         # Git ignore rules
 │
-├── src/                              # Source code
+├── src/                               # Source code
 │   ├── __init__.py
-│   ├── scraper/                      # Web scraping components
+│   ├── scraper/                       # Web scraping components
 │   │   ├── __init__.py
-│   │   ├── crawler.py                # Main Selenium crawler
-│   │   └── parser.py                 # HTML parsing utilities
-│   ├── models/                       # Database models
+│   │   ├── crawler.py                 # Main Selenium crawler
+│   │   └── parser.py                  # HTML parsing utilities
+│   ├── models/                        # Database models
 │   │   ├── __init__.py
-│   │   ├── base.py                   # SQLAlchemy base classes
-│   │   ├── book_listing.py           # Book listing model
-│   │   └── crawl_session.py          # Crawl session model
-│   ├── config/                       # Configuration management
+│   │   ├── base.py                    # SQLAlchemy base classes
+│   │   ├── book_listing.py            # Book listing model
+│   │   └── crawl_session.py           # Crawl session model
+│   ├── config/                        # Configuration management
 │   │   ├── __init__.py
-│   │   ├── config_loader.py          # YAML config loader
-│   │   └── database.py               # Database connection manager
-│   └── utils/                        # Utility functions
+│   │   ├── config_loader.py           # YAML config loader
+│   │   └── database.py                # Database connection manager
+│   └── utils/                         # Utility functions
 │       ├── __init__.py
-│       ├── logger.py                 # Logging configuration
-│       ├── scheduler.py              # Task scheduling
-│       ├── notifications.py          # Email notifications
-│       ├── retry.py                  # Retry decorators
-│       └── error_handler.py          # Error handling utilities
+│       ├── logger.py                  # Logging configuration
+│       ├── scheduler.py               # Task scheduling
+│       ├── notifications.py           # Email notifications
+│       ├── retry.py                   # Retry decorators
+│       └── error_handler.py           # Error handling utilities
 │
-├── tests/                            # Test suite
+├── tests/                             # Test suite
 │   ├── __init__.py
-│   ├── conftest.py                   # Pytest configuration
-│   ├── run_tests.py                  # Test runner script
-│   ├── config-test.yaml              # Test configuration
-│   ├── unit/                         # Unit tests
+│   ├── conftest.py                    # Pytest configuration
+│   ├── run_tests.py                   # Test runner script
+│   ├── config-test.yaml               # Test configuration
+│   ├── unit/                          # Unit tests
 │   │   ├── __init__.py
 │   │   ├── test_config.py
 │   │   ├── test_parser.py
 │   │   ├── test_retry.py
 │   │   ├── test_error_handler.py
 │   │   └── test_notifications.py
-│   ├── integration/                  # Integration tests
+│   ├── integration/                   # Integration tests
 │   │   ├── __init__.py
 │   │   ├── test_components.py
 │   │   ├── test_database.py
 │   │   └── test_complete.py
-│   └── functional/                   # Functional tests
+│   └── functional/                    # Functional tests
 │       ├── __init__.py
 │       ├── test_production_crawler.py
 │       └── test_end_to_end.py
 │
-├── database/                         # Database related files
-│   ├── schema.sql                    # PostgreSQL schema
-│   └── migrations/                   # Database migrations (future)
+├── quality/                           # Quality assurance
+│   ├── README.md                      # Quality documentation
+│   ├── audits/                        # Security and code audits
+│   │   ├── reports/                   # Audit reports
+│   │   │   ├── project_structure_audit.md
+│   │   │   ├── code_quality_audit.md
+│   │   │   ├── configuration_audit.md
+│   │   │   ├── database_audit.md
+│   │   │   ├── functionality_audit.md
+│   │   │   └── summary_audit.md
+│   │   ├── fixes/                     # Fix documentation
+│   │   │   └── critical/
+│   │   │       └── README.md
+│   │   └── logs/                      # Audit logs
+│   │       ├── audit_log.md
+│   │       └── post_audit_test_report.md
+│   ├── reports/                       # Quality reports
+│   │   └── POST_AUDIT_SUMMARY.md
+│   └── testing/                       # Testing tools
+│       └── check_project.py           # Project verification
 │
-├── config/                           # Configuration examples
-│   ├── config-production.yaml        # Production configuration
-│   ├── config-development.yaml       # Development configuration
-│   └── config-testing.yaml          # Testing configuration
+├── database/                          # Database related files
+│   ├── schema.sql                     # PostgreSQL schema
+│   └── migrations/                    # Database migrations (future)
 │
-├── tools/                            # Development and management tools
-│   ├── install.sh                    # Installation script
-│   ├── check_setup.py                # Environment verification
-│   └── monitor.py                    # Monitoring and statistics
+├── config/                            # Configuration examples
+│   ├── config-production.yaml         # Production configuration
+│   ├── config-development.yaml        # Development configuration
+│   └── config-testing.yaml           # Testing configuration
 │
-├── deployment/                       # Deployment configurations
-│   ├── docker-compose.yml            # Docker Compose setup
-│   ├── Dockerfile                    # Docker image definition
-│   └── systemd-service.service       # Systemd service file
+├── tools/                             # Development and management tools
+│   ├── install.sh                     # Installation script
+│   ├── check_setup.py                 # Environment verification
+│   └── monitor.py                     # Monitoring and statistics
 │
-├── docs/                            # Documentation
-│   ├── PROJECT_STRUCTURE.md         # This file
-│   ├── DEPLOYMENT.md                # Deployment guide
-│   └── SUMMARY.md                   # Project summary
+├── deployment/                        # Deployment configurations
+│   ├── docker-compose.yml             # Docker Compose setup
+│   ├── Dockerfile                     # Docker image definition
+│   └── systemd-service.service        # Systemd service file
 │
-└── logs/                            # Application logs (created at runtime)
+├── docs/                             # Documentation
+│   ├── PROJECT_STRUCTURE.md          # This file
+│   ├── PROJECT_REORGANIZATION_SUMMARY.md # Reorganization details
+│   ├── DEPLOYMENT.md                 # Deployment guide
+│   └── SUMMARY.md                    # Project summary
+│
+└── logs/                             # Application logs (created at runtime)
 ```
 
 ## 📋 File Descriptions
@@ -136,6 +158,19 @@ Kleinanzeige-Buecherwurm/
 - **`test_production_crawler.py`**: Production environment tests
 - **`test_end_to_end.py`**: End-to-end workflow tests
 
+### Quality Assurance (`quality/`)
+
+#### Audits (`quality/audits/`)
+- **`reports/`**: Comprehensive security and code quality audit reports
+- **`fixes/`**: Documentation of implemented fixes
+- **`logs/`**: Detailed audit process logs
+
+#### Reports (`quality/reports/`)
+- **`POST_AUDIT_SUMMARY.md`**: Summary of audit results and improvements
+
+#### Testing (`quality/testing/`)
+- **`check_project.py`**: Automated project verification script
+
 ### Configuration (`config/`)
 - **`config-production.yaml`**: Production-optimized configuration
 - **`config-development.yaml`**: Development configuration with debugging
@@ -153,6 +188,7 @@ Kleinanzeige-Buecherwurm/
 
 ### Documentation (`docs/`)
 - **`PROJECT_STRUCTURE.md`**: This file - project structure documentation
+- **`PROJECT_REORGANIZATION_SUMMARY.md`**: Project reorganization details and improvements
 - **`DEPLOYMENT.md`**: Deployment guide and instructions
 - **`SUMMARY.md`**: Project summary and completion status
 
@@ -176,6 +212,12 @@ Kleinanzeige-Buecherwurm/
 - **Coverage**: Test coverage reporting
 - **CI/CD Ready**: Suitable for continuous integration
 
+### Quality Assurance
+- **Comprehensive Audits**: Security, performance, and code quality
+- **Fix Tracking**: Detailed documentation of improvements
+- **Automated Testing**: Project verification and validation tools
+- **Continuous Monitoring**: Quality metrics and reporting
+
 ### Configuration Management
 - **Environment Specific**: Separate configs for different environments
 - **Environment Variables**: Secure handling of sensitive data
@@ -194,7 +236,7 @@ Kleinanzeige-Buecherwurm/
 1. **Setup**: `./tools/install.sh`
 2. **Test**: `python tests/run_tests.py --unit`
 3. **Develop**: Edit source code in `src/`
-4. **Test**: `python tests/run_tests.py --integration`
+4. **Quality Check**: `python quality/testing/check_project.py`
 5. **Deploy**: Use configurations in `config/` and `deployment/`
 
 ### Testing Workflow
@@ -203,6 +245,12 @@ Kleinanzeige-Buecherwurm/
 3. **Integration**: `python tests/run_tests.py --integration`
 4. **Functional**: `python tests/run_tests.py --functional`
 5. **Coverage**: `python tests/run_tests.py --coverage`
+
+### Quality Assurance Workflow
+1. **Project Verification**: `python quality/testing/check_project.py`
+2. **Review Audit Reports**: Check `quality/audits/reports/`
+3. **Monitor Quality**: Review `quality/reports/`
+4. **Track Improvements**: Update fix documentation
 
 ### Deployment Workflow
 1. **Environment Check**: `python tools/check_setup.py`
@@ -219,10 +267,16 @@ Kleinanzeige-Buecherwurm/
 - **Error Tracking**: Comprehensive error logging
 - **System Health**: Resource usage monitoring
 
+### Quality Metrics
+- **Code Quality**: Tracked in audit reports
+- **Security Score**: Vulnerability assessments
+- **Test Coverage**: Unit and integration test coverage
+- **Performance**: Response times and resource usage
+
 ### Log Management
 - **Structured Logging**: JSON-formatted logs
 - **Log Rotation**: Automatic log file rotation
 - **Log Retention**: Configurable retention policies
 - **Log Analysis**: Tools for log analysis and troubleshooting
 
-This structure provides a solid foundation for a production-ready web scraping application with proper separation of concerns, comprehensive testing, and flexible deployment options.
+This structure provides a solid foundation for a production-ready web scraping application with proper separation of concerns, comprehensive testing, quality assurance, and flexible deployment options.

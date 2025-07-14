@@ -216,7 +216,9 @@ def check_documentation():
         ('CLAUDE.md', ['# CLAUDE.md', '## Project Overview']),
         ('docs/PROJECT_STRUCTURE.md', ['# Project Structure', '## 📁 Complete Directory Structure']),
         ('docs/DEPLOYMENT.md', ['# Deployment Guide', '## Prerequisites']),
-        ('docs/SUMMARY.md', ['# Kleinanzeige-Bücherwurm - Project Completion Summary', '## 🎯 Project Overview'])
+        ('docs/SUMMARY.md', ['# Kleinanzeige-Bücherwurm - Project Completion Summary', '## 🎯 Project Overview']),
+        ('docs/PROJECT_REORGANIZATION_SUMMARY.md', ['# Project Reorganization Summary', '## 🎯 Reorganization Objectives']),
+        ('quality/reports/POST_AUDIT_SUMMARY.md', ['# Kleinanzeige-Bücherwurm Project Audit and Fix Summary', '## 🎯 Overall Results'])
     ]
     
     all_docs_ok = True

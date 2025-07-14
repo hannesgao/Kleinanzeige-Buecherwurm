@@ -1,0 +1,59 @@
+# Testing configuration for Kleinanzeigen Crawler
+# This configuration is optimized for automated testing
+
+# Search parameters - minimal for testing
+search:
+  category: "antike-buecher"
+  location: "Karlsruhe"
+  radius_km: 5  # Very small radius
+  max_price: 0
+  keywords:
+    - "sammlung"
+  
+# Selenium settings - minimal for testing
+selenium:
+  browser: "chrome"
+  headless: true
+  window_size: "1024,768"
+  page_load_timeout: 20
+  implicit_wait: 5
+  user_agent: "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
+
+# Crawler settings - very limited for testing
+crawler:
+  max_pages: 1  # Only one page for testing
+  delay_between_requests: 1  # Minimal delay
+  retry_attempts: 1
+  retry_delay: 1
+  
+# Database settings - in-memory or test database
+database:
+  type: "postgresql"
+  host: "localhost"
+  port: 5432
+  name: "test_crawler"
+  user: "test_user"
+  password: "test_password"
+  
+# Logging settings - minimal for testing
+logging:
+  level: "ERROR"
+  format: "{time} | {level} | {message}"
+  rotation: "1 MB"
+  retention: "1 day"
+  
+# Notification settings - disabled for testing
+notifications:
+  enabled: false
+  email:
+    smtp_server: "localhost"
+    smtp_port: 25
+    sender: "test@localhost"
+    password: "test"
+    recipients:
+      - "test@localhost"
+  
+# Schedule settings - disabled for testing
+schedule:
+  enabled: false
+  cron: "0 0 * * *"

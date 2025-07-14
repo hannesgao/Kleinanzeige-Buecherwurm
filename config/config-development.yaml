@@ -1,0 +1,60 @@
+# Development configuration for Kleinanzeigen Crawler
+# This configuration is optimized for development and testing
+
+# Search parameters - limited for development
+search:
+  category: "antike-buecher"
+  location: "Karlsruhe"
+  radius_km: 10  # Smaller radius for testing
+  max_price: 0
+  keywords:
+    - "sammlung"
+    - "konvolut"
+  
+# Selenium settings - visible browser for debugging
+selenium:
+  browser: "chrome"
+  headless: false  # Show browser for debugging
+  window_size: "1280,720"
+  page_load_timeout: 30
+  implicit_wait: 10
+  user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
+
+# Crawler settings - fast for development
+crawler:
+  max_pages: 3  # Limited pages for testing
+  delay_between_requests: 2  # Faster for development
+  retry_attempts: 2
+  retry_delay: 3
+  
+# Database settings - use local test database
+database:
+  type: "postgresql"
+  host: "localhost"
+  port: 5432
+  name: "test_crawler"
+  user: "test_user"
+  password: "test_password"
+  
+# Logging settings - debug level
+logging:
+  level: "DEBUG"
+  format: "{time:YYYY-MM-DD HH:mm:ss} | {level} | {name}:{function}:{line} - {message}"
+  rotation: "10 MB"
+  retention: "3 days"
+  
+# Notification settings - disabled for development
+notifications:
+  enabled: false
+  email:
+    smtp_server: "smtp.gmail.com"
+    smtp_port: 587
+    sender: "dev@example.com"
+    password: "dev_password"
+    recipients:
+      - "dev@example.com"
+  
+# Schedule settings - disabled for development
+schedule:
+  enabled: false
+  cron: "0 */1 * * *"

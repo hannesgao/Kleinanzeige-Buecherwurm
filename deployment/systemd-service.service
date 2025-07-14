@@ -1,0 +1,38 @@
+[Unit]
+Description=Kleinanzeigen Book Crawler
+After=network.target postgresql.service
+Wants=postgresql.service
+
+[Service]
+Type=simple
+User=kleinanzeigen
+Group=kleinanzeigen
+WorkingDirectory=/home/kleinanzeigen/Kleinanzeige-Buecherwurm
+Environment=PATH=/home/kleinanzeigen/Kleinanzeige-Buecherwurm/venv/bin
+
+# Main command
+ExecStart=/home/kleinanzeigen/Kleinanzeige-Buecherwurm/venv/bin/python main.py --schedule --headless
+
+# Restart policy
+Restart=always
+RestartSec=30
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/home/kleinanzeigen/Kleinanzeige-Buecherwurm/logs
+ReadWritePaths=/home/kleinanzeigen/Kleinanzeige-Buecherwurm/data
+
+# Resource limits
+MemoryMax=2G
+CPUQuota=50%
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=kleinanzeigen-crawler
+
+[Install]
+WantedBy=multi-user.target

@@ -28,27 +28,33 @@ A fully-implemented Python web crawler for finding free antique book collections
 ```bash
 git clone https://github.com/hannesgao/Kleinanzeige-Buecherwurm.git
 cd Kleinanzeige-Buecherwurm
+```
+
+2. **Automated installation**:
+```bash
+./tools/install.sh
+```
+
+3. **Manual installation**:
+```bash
 python -m venv venv
 source venv/bin/activate  # Windows: venv\Scripts\activate
-```
-
-2. **Install dependencies**:
-```bash
 pip install -r requirements.txt
-```
-
-3. **Configure environment**:
-```bash
 cp .env.example .env
 # Edit .env with your database and email credentials
 ```
 
-4. **Initialize database**:
+4. **Verify setup**:
+```bash
+python tools/check_setup.py
+```
+
+5. **Initialize database**:
 ```bash
 python main.py --init-db
 ```
 
-5. **Test the crawler**:
+6. **Test the crawler**:
 ```bash
 python main.py --test --headless
 ```
@@ -98,43 +104,48 @@ Edit `config.yaml` for:
 ## 📁 Project Structure
 
 ```
-├── src/
-│   ├── scraper/
-│   │   ├── crawler.py      # Main Selenium crawler
-│   │   └── parser.py       # HTML parsing logic
-│   ├── models/
-│   │   ├── book_listing.py # Listing database model
-│   │   └── crawl_session.py # Session tracking
-│   ├── config/
-│   │   ├── config_loader.py # YAML + env config
-│   │   └── database.py     # Database manager
-│   └── utils/
-│       ├── logger.py       # Logging setup
-│       ├── scheduler.py    # Cron scheduling
-│       ├── notifications.py # Email notifications
-│       ├── retry.py        # Retry decorators
-│       └── error_handler.py # Error management
-├── database/
-│   └── schema.sql          # PostgreSQL schema
-├── tests/                  # Unit tests
-├── logs/                   # Application logs
-├── config.yaml             # Main configuration
-├── requirements.txt        # Dependencies
-└── main.py                # Entry point
+├── src/                    # Source code
+│   ├── scraper/           # Web scraping components
+│   ├── models/            # Database models
+│   ├── config/            # Configuration management
+│   └── utils/             # Utility functions
+├── tests/                 # Complete test suite
+│   ├── unit/              # Unit tests
+│   ├── integration/       # Integration tests
+│   └── functional/        # Functional tests
+├── config/                # Configuration examples
+├── tools/                 # Development tools
+├── deployment/            # Deployment configurations
+├── docs/                  # Documentation
+├── database/              # Database schema
+├── logs/                  # Application logs
+├── config.yaml            # Main configuration
+├── requirements.txt       # Dependencies
+└── main.py               # Entry point
 ```
+
+See [docs/PROJECT_STRUCTURE.md](docs/PROJECT_STRUCTURE.md) for detailed structure documentation.
 
 ## 🔧 Development
 
 ### Running Tests
 ```bash
+# Quick tests (recommended)
+python tests/run_tests.py --quick
+
 # All tests
-pytest
+python tests/run_tests.py --all
+
+# Specific test types
+python tests/run_tests.py --unit
+python tests/run_tests.py --integration
+python tests/run_tests.py --functional
 
 # With coverage
-pytest --cov=src
+python tests/run_tests.py --coverage
 
-# Specific test
-pytest tests/test_parser.py -v
+# Production tests
+python tests/run_tests.py --production
 ```
 
 ### Code Quality
@@ -159,6 +170,21 @@ SELECT * FROM crawl_sessions ORDER BY start_time DESC LIMIT 10;
 
 # Count active listings
 SELECT COUNT(*) FROM book_listings WHERE is_active = TRUE;
+```
+
+### Monitoring
+```bash
+# View crawler statistics
+python tools/monitor.py --stats
+
+# View recent sessions
+python tools/monitor.py --sessions 10
+
+# View system status
+python tools/monitor.py --system
+
+# View all information
+python tools/monitor.py --all
 ```
 
 ## 🛡️ Error Handling

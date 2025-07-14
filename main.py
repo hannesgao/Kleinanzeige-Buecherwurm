@@ -3,6 +3,7 @@ import argparse
 import sys
 import json
 import uuid
+import os
 from datetime import datetime
 from typing import List, Dict
 from loguru import logger
@@ -14,29 +15,75 @@ from sqlalchemy.exc import IntegrityError
 
 def main():
     """Main entry point for the crawler"""
-    parser = argparse.ArgumentParser(description='Kleinanzeigen Book Crawler')
-    parser.add_argument('--config', default='config.yaml', help='Path to config file')
-    parser.add_argument('--schedule', action='store_true', help='Run with scheduler')
-    parser.add_argument('--init-db', action='store_true', help='Initialize database tables')
-    parser.add_argument('--headless', action='store_true', help='Run browser in headless mode')
-    parser.add_argument('--test', action='store_true', help='Run in test mode (limit to 5 listings)')
+    parser = argparse.ArgumentParser(
+        description='Kleinanzeigen Book Crawler - Find free antique books around Karlsruhe',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  python main.py --test --headless          # Test run in headless mode
+  python main.py --schedule                 # Run with scheduler
+  python main.py --config custom.yaml       # Use custom config
+  python main.py --init-db                  # Initialize database
+
+For more information, see README.md
+        """
+    )
+    parser.add_argument('--config', default='config.yaml', 
+                       help='Path to config file (default: config.yaml)')
+    parser.add_argument('--schedule', action='store_true', 
+                       help='Run with scheduler (uses cron from config)')
+    parser.add_argument('--init-db', action='store_true', 
+                       help='Initialize database tables and exit')
+    parser.add_argument('--headless', action='store_true', 
+                       help='Run browser in headless mode (overrides config)')
+    parser.add_argument('--test', action='store_true', 
+                       help='Run in test mode (limit to 5 listings)')
+    parser.add_argument('--version', action='version', version='%(prog)s 1.0.0')
     
     args = parser.parse_args()
     
-    # Load configuration
-    config = ConfigLoader(args.config)
+    # Validate configuration file exists
+    if not os.path.exists(args.config):
+        logger.error(f"Configuration file not found: {args.config}")
+        logger.info("Please create a config file or use --config to specify a different path")
+        logger.info("You can copy config.yaml as a template")
+        sys.exit(1)
     
-    # Setup logger
-    setup_logger(config.get('logging', {}))
-    
-    # Initialize database
-    db_manager = DatabaseManager(config.get('database', {}))
-    
-    if args.init_db:
-        logger.info("Initializing database tables...")
-        db_manager.create_tables()
-        logger.info("Database initialization complete")
-        return
+    try:
+        # Load configuration
+        config = ConfigLoader(args.config)
+        logger.info(f"Configuration loaded from: {args.config}")
+        
+        # Setup logger
+        setup_logger(config.get('logging', {}))
+        
+        # Validate required configuration sections
+        required_sections = ['search', 'selenium', 'database']
+        for section in required_sections:
+            if not config.get(section):
+                logger.error(f"Missing required configuration section: {section}")
+                sys.exit(1)
+        
+        # Initialize database
+        db_config = config.get('database', {})
+        if not all(db_config.get(key) for key in ['host', 'name', 'user', 'password']):
+            logger.error("Incomplete database configuration. Please check your .env file")
+            logger.info("Required: DB_HOST, DB_NAME, DB_USER, DB_PASSWORD")
+            sys.exit(1)
+            
+        db_manager = DatabaseManager(db_config)
+        logger.info("Database connection established")
+        
+        if args.init_db:
+            logger.info("Initializing database tables...")
+            db_manager.create_tables()
+            logger.info("Database initialization complete")
+            return
+            
+    except Exception as e:
+        logger.error(f"Initialization failed: {e}")
+        logger.info("Please check your configuration and try again")
+        sys.exit(1)
     
     # Override headless mode if specified
     selenium_config = config.get('selenium', {})

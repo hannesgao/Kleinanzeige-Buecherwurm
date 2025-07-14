@@ -1,0 +1,61 @@
+# Docker Compose configuration for Kleinanzeigen Crawler
+# This sets up the complete environment including PostgreSQL
+
+version: '3.8'
+
+services:
+  # PostgreSQL database
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: kleinanzeigen_crawler
+      POSTGRES_USER: crawler_user
+      POSTGRES_PASSWORD: secure_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U crawler_user -d kleinanzeigen_crawler"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Kleinanzeigen crawler
+  crawler:
+    build: .
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_HOST: postgres
+      DB_NAME: kleinanzeigen_crawler
+      DB_USER: crawler_user
+      DB_PASSWORD: secure_password
+      SMTP_SERVER: smtp.gmail.com
+      EMAIL_SENDER: your_email@gmail.com
+      EMAIL_PASSWORD: your_app_password
+      EMAIL_RECIPIENT: recipient@example.com
+    volumes:
+      - ./logs:/app/logs
+      - ./config.yaml:/app/config.yaml
+    command: ["python", "main.py", "--schedule", "--headless"]
+    restart: unless-stopped
+
+  # pgAdmin (optional - for database management)
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin_password
+    ports:
+      - "8080:80"
+    depends_on:
+      - postgres
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+
+volumes:
+  postgres_data:
+  pgadmin_data:
